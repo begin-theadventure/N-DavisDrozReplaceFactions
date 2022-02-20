@@ -1,5 +1,5 @@
 # Davis-Droz-Replace-Factions
-Northstar mod to replace all factions with Davis & Droz.
+Replaces all (seven) factions with Davis & Droz.
 
 _It's a fork of DavisDrozReplaceGates by **Cpone**._
 

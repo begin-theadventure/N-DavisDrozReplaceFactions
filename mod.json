@@ -1,0 +1,65 @@
+{
+	"Name" : "ඞDavis Droz Replace Factions",
+	"Description" : "-Replaces all (seven) factions with Davis & Droz.\nCredit: Cpone.",
+	"Version": "ඞ1.0.0.2",
+
+	"LoadPriority": 0,
+
+	"Scripts": [
+		{
+			"Path": "cl_64.gnut",
+			"RunOn": "CLIENT && MP",
+			"ClientCallback": {
+				"Before": "ClDavisDrozReplaceThe64Init"
+			}
+		},
+
+		{
+			"Path": "cl_aces.gnut",
+			"RunOn": "CLIENT && MP",
+			"ClientCallback": {
+				"Before": "ClDavisDrozReplaceAngelCityEliteInit"
+			}
+		},
+
+		{
+			"Path": "cl_apex.gnut",
+			"RunOn": "CLIENT && MP",
+			"ClientCallback": {
+				"Before": "ClDavisDrozReplaceApexPredatorsInit"
+			}
+		},
+		
+		{
+			"Path": "cl_ares.gnut",
+			"RunOn": "CLIENT && MP",
+			"ClientCallback": {
+				"Before": "ClDavisDrozReplaceARESDivisionInit"
+			}
+		},
+		{
+			"Path": "cl_marauder.gnut",
+			"RunOn": "CLIENT && MP",
+			"ClientCallback": {
+				"Before": "ClDavisDrozReplaceMarauderCorpsInit"
+			}
+		},
+
+		{
+			"Path": "cl_marvin.gnut",
+			"RunOn": "CLIENT && MP",
+			"ClientCallback": {
+				"Before": "ClDavisDrozReplaceMarvinsFinestHourInit"
+			}
+		},
+		
+		{
+			"Path": "cl_vinson.gnut",
+			"RunOn": "CLIENT && MP",
+			"ClientCallback": {
+				"Before": "ClDavisDrozReplaceVinsonDynamicsInit"
+			}
+		}
+
+	]
+}

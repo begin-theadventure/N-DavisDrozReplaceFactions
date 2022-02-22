@@ -1,0 +1,216 @@
+global function ClDavisDrozReplaceMarvinsFinestHourInit
+
+struct DavisDroz_RespawnDropshipIntroStruct {
+	bool isDrozTalking = true
+	string dialogueLine
+	float diagDelay = 0.3
+}
+
+struct {
+	entity droz = null
+	entity davis = null
+	array<string> drozDropshipAnims = ["commander_DLC_flyin_Droz_finally", "commander_DLC_flyin_Droz_everytime", "commander_DLC_flyin_Droz_brother"]
+	array<asset> drozDropshipProps = [FD_MODEL_DROZ_TABLET_PROP, FD_MODEL_DROZ_TABLET_PROP, DATA_KNIFE_MODEL ] //Make sure this lines up in the same order as Droz's animations!
+	array< string > davisDropshipAnims = ["commander_DLC_flyin_Davis_finally", "commander_DLC_flyin_Davis_everytime", "commander_DLC_flyin_Davis_brother"]
+	array< array <DavisDroz_RespawnDropshipIntroStruct> > respawnDropshipIntroData
+
+	int dropshipIntroAnimIndex = -1
+} file
+
+void function ClDavisDrozReplaceMarvinsFinestHourInit() {
+	AddCallback_LocalClientPlayerSpawned(ClDavisDrozReplaceMarvinsFinestHourLocalClientPlayerSpawned)
+}
+
+void function ClDavisDrozReplaceMarvinsFinestHourLocalClientPlayerSpawned(entity player) {
+	string myFaction = GetFactionChoice(player)
+
+	if (myFaction == "faction_marvin") {
+		OverrideFactionLeaderStruct davisDrozFactionLeaderStruct
+		davisDrozFactionLeaderStruct.dialoguePrefix = "mcor_cmdr"
+		davisDrozFactionLeaderStruct.factionName = "#FACTION_marvin"
+		davisDrozFactionLeaderStruct.factionLogo = $"rui/faction/faction_logo_last_resort"
+		davisDrozFactionLeaderStruct.useWaveForm = true
+		davisDrozFactionLeaderStruct.dropshipIntroOverride = DavisDroz_CustomDropshipIntro
+
+		SetOverrideFactionLeader(davisDrozFactionLeaderStruct)
+
+		DavisDroz_RespawnDropshipIntroInit()
+	}
+}
+
+void function DavisDroz_RespawnDropshipIntroInit() {
+	DavisDroz_RespawnDropshipIntroStruct sequence0_0
+	sequence0_0.isDrozTalking = true
+	sequence0_0.dialogueLine = "diag_mcor_cmdr_fd_retryDropship_01a_droz"
+
+	DavisDroz_RespawnDropshipIntroStruct sequence0_1
+	sequence0_1.isDrozTalking = false
+	sequence0_1.dialogueLine = "diag_mcor_cmdr_fd_retryDropship_01b_davis"
+
+	array<DavisDroz_RespawnDropshipIntroStruct> sequence0 = [sequence0_0, sequence0_1]
+
+	DavisDroz_RespawnDropshipIntroStruct sequence1_0
+	sequence1_0.isDrozTalking = false
+	sequence1_0.dialogueLine = "diag_mcor_cmdr_fd_retryDropship_02a_davis"
+
+	DavisDroz_RespawnDropshipIntroStruct sequence1_1
+	sequence1_1.isDrozTalking = true
+	sequence1_1.dialogueLine = "diag_mcor_cmdr_fd_retryDropship_02b_droz"
+	sequence1_1.diagDelay = 3.2
+
+	DavisDroz_RespawnDropshipIntroStruct sequence1_2
+	sequence1_2.isDrozTalking = false
+	sequence1_2.dialogueLine = "diag_mcor_cmdr_fd_retryDropship_02c_davis"
+
+	array<DavisDroz_RespawnDropshipIntroStruct> sequence1 = [sequence1_0, sequence1_1, sequence1_2]
+
+	DavisDroz_RespawnDropshipIntroStruct sequence2_0
+	sequence2_0.isDrozTalking = true
+	sequence2_0.dialogueLine = "diag_mcor_cmdr_fd_retryDropship_03a_droz"
+
+	DavisDroz_RespawnDropshipIntroStruct sequence2_1
+	sequence2_1.isDrozTalking = false
+	sequence2_1.dialogueLine = "diag_mcor_cmdr_fd_retryDropship_03b_davis"
+
+	array<DavisDroz_RespawnDropshipIntroStruct> sequence2 = [sequence2_0, sequence2_1]
+
+	file.respawnDropshipIntroData = [sequence0, sequence1, sequence2]
+}
+
+void function DavisDroz_CustomDropshipIntro(int shipEHandle, float dropshipSpawnTime) {
+	entity dropShip = GetEntityFromEncodedEHandle(shipEHandle)
+	entity localViewPlayer = GetLocalViewPlayer()
+
+	entity davis = CreatePropDynamic( FD_MODEL_DAVIS )
+	davis.SetParent( dropShip, "ORIGIN" )
+	davis.MarkAsNonMovingAttachment()
+	file.davis = davis
+
+	entity droz = CreatePropDynamic( FD_MODEL_DROZ )
+	droz.SetParent( dropShip, "ORIGIN" )
+	droz.MarkAsNonMovingAttachment()
+	file.droz = droz
+
+	Assert( file.davisDropshipAnims.len() == file.drozDropshipAnims.len() )
+
+	string davisAnim
+	string drozAnim
+	entity drozProp
+
+	int dropshipAnimIndex = file.dropshipIntroAnimIndex
+
+	if (!DavisDroz_DidWeJustLose()) {
+		if (file.dropshipIntroAnimIndex == -1)
+			dropshipAnimIndex = RandomInt(file.davisDropshipAnims.len())
+
+		drozProp = CreatePropDynamic(file.drozDropshipProps[dropshipAnimIndex])
+		drozProp.MarkAsNonMovingAttachment()
+		drozProp.SetParent(droz, "R_HAND")
+		davisAnim = file.davisDropshipAnims[dropshipAnimIndex]
+		drozAnim = file.drozDropshipAnims[dropshipAnimIndex]
+	} else {
+		drozAnim  = "droz_fd_respawn_intro"
+		davisAnim = "Militia_flyinA_countdown_mac"
+		drozProp = CreatePropDynamic($"models/Weapons/p2011/w_p2011.mdl")
+		drozProp.MarkAsNonMovingAttachment()
+		drozProp.SetParent(droz, "KNIFE")
+
+		AddAnimEvent(droz, "play_fd_respawn_intro_diag", PlayDavisDrozRespawnIntroDiag)
+	}
+
+	thread PlayAnim(davis, davisAnim, dropShip, "ORIGIN")
+	thread PlayAnim(droz, drozAnim, dropShip, "ORIGIN")
+
+	droz.Anim_SetStartTime(dropshipSpawnTime)
+	droz.LerpSkyScale(0.9, 0.1)
+	SetTeam(droz, localViewPlayer.GetTeam())
+
+	davis.Anim_SetStartTime(dropshipSpawnTime)
+	davis.LerpSkyScale(0.9, 0.1)
+	SetTeam(davis, localViewPlayer.GetTeam())
+
+	dropShip.EndSignal("OnDestroy")
+
+	OnThreadEnd(function() : (davis, droz, drozProp) {
+		if (IsValid(davis))
+			davis.Destroy()
+
+		if (IsValid(droz))
+			droz.Destroy()
+
+		if (IsValid(drozProp))
+			drozProp.Destroy()
+	})
+
+	WaitForever()
+}
+
+void function PlayDavisDrozRespawnIntroDiag(entity droz) {
+	thread PlayDavisDrozRespawnIntroDiag_threaded()
+}
+
+void function PlayDavisDrozRespawnIntroDiag_threaded() {
+	wait 3.5
+
+	entity droz = file.droz
+	entity davis = file.davis
+
+	if ( !IsValid( droz ) )
+		return
+
+	if ( !IsValid( davis ) )
+		return
+
+	droz.EndSignal( "OnDestroy" )
+	davis.EndSignal( "OnDestroy" )
+
+	int randomDiagIndex = file.dropshipIntroAnimIndex
+
+	if ( file.dropshipIntroAnimIndex == -1 )
+		randomDiagIndex = RandomInt(file.respawnDropshipIntroData.len())
+
+	array<DavisDroz_RespawnDropshipIntroStruct> respawnDropshipIntroSequence = file.respawnDropshipIntroData[randomDiagIndex]
+	foreach(dataStruct in respawnDropshipIntroSequence) {
+		if ( dataStruct.isDrozTalking ) {
+			var drozDiagHandle = EmitSoundOnEntity( droz, dataStruct.dialogueLine)
+			WaitSignal( drozDiagHandle, "OnSoundFinished")
+		} else {
+			var davisDiagHandle = EmitSoundOnEntity( davis, dataStruct.dialogueLine )
+			WaitSignal(davisDiagHandle, "OnSoundFinished")
+		}
+
+		wait dataStruct.diagDelay
+	}
+}
+
+float function GetPlayerSingleTeamScoreboardRankPercentage() {
+	IntFromEntityCompare compareFunc = GetScoreboardCompareFunc()
+	array<entity> sortedPlayers = GetSortedPlayers(compareFunc, 0)
+
+	int index = 0
+	int sortedPlayerCount = sortedPlayers.len()
+	while (index < sortedPlayerCount) {
+		if (sortedPlayers[index] == GetLocalViewPlayer())
+			return index/float(sortedPlayerCount)
+
+		index++
+	}
+
+	return 1.0
+}
+
+bool function DavisDroz_DidWeJustLose() {
+	int myTeam = GetLocalViewPlayer().GetTeam()
+
+	if ( IsRoundBased() ) {
+		return (level.nv.winningTeam != myTeam) && (level.nv.winningTeam != -1)
+	} else {
+		if ( IsFFAGame() || IsSingleTeamMode() ) {
+			return GetPlayerSingleTeamScoreboardRankPercentage() > 0.5
+		}
+
+		return GameRules_GetTeamScore( GetEnemyTeam(myTeam) ) > GameRules_GetTeamScore( myTeam )
+	}
+
+	return false
+}

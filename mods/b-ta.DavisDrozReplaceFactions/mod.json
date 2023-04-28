@@ -1,9 +1,8 @@
 {
-	"Name" : "ඞDavis Droz Replace Factions",
-	"Description" : "-Replaces all (seven) factions with Davis & Droz.\nCredit: Cpone.",
-	"Version": "ඞ1.0.0.2",
-
-	"LoadPriority": 0,
+	"Name" : "ඞb-ta.DavisDrozReplaceFactions",
+	"Description" : "-Replaces all (seven) factions with Davis & Droz.\nThis is an edit of Cpone's DavisDrozReplaceGates.\nbegin-theadventure 2023",
+	"Version": "ඞ1.0.5",
+	"LoadPriority": 1,
 
 	"Scripts": [
 		{
@@ -13,7 +12,6 @@
 				"Before": "ClDavisDrozReplaceThe64Init"
 			}
 		},
-
 		{
 			"Path": "cl_aces.gnut",
 			"RunOn": "CLIENT && MP",
@@ -21,7 +19,6 @@
 				"Before": "ClDavisDrozReplaceAngelCityEliteInit"
 			}
 		},
-
 		{
 			"Path": "cl_apex.gnut",
 			"RunOn": "CLIENT && MP",
@@ -29,7 +26,6 @@
 				"Before": "ClDavisDrozReplaceApexPredatorsInit"
 			}
 		},
-		
 		{
 			"Path": "cl_ares.gnut",
 			"RunOn": "CLIENT && MP",
@@ -44,7 +40,6 @@
 				"Before": "ClDavisDrozReplaceMarauderCorpsInit"
 			}
 		},
-
 		{
 			"Path": "cl_marvin.gnut",
 			"RunOn": "CLIENT && MP",
@@ -52,7 +47,6 @@
 				"Before": "ClDavisDrozReplaceMarvinsFinestHourInit"
 			}
 		},
-		
 		{
 			"Path": "cl_vinson.gnut",
 			"RunOn": "CLIENT && MP",
@@ -60,6 +54,5 @@
 				"Before": "ClDavisDrozReplaceVinsonDynamicsInit"
 			}
 		}
-
 	]
 }

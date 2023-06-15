@@ -29,7 +29,7 @@ global function PlayAnnouncerLineThroughDeathWithPriority //Faction Leader annou
 	ServerCallback_PlayConversation( conversationType, priority )
 */
 
-const WAVEFORM_FADE_DURATION = 1000000000
+const WAVEFORM_FADE_DURATION = 1.0
 const RADIO_SPEECH_DELAY = 0.4
 const PLAYER_HEARS_RADIO = false
 const FRIENDLY_GRUNT_MINIMAP_MATERIAL = $"vgui/HUD/threathud_friendly_soldier"

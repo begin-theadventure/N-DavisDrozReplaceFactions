@@ -13,7 +13,7 @@ The waveform also reacts to the audio override.
 
 If any mod you have uses these files (`cl_conversation.gnut` & `cl_faction_dialogue.gnut`), change the values in it instead to avoid conflicts.
 
-This mod is an edit of **Cpone**'s DavisDrozReplaceGates, adding the ID card wouldn't have been possible without **NachosChipeados**.
+This mod is an edit of [**Cpone**](https://github.com/connieprice)'s DavisDrozReplaceGates, adding the ID card wouldn't have been possible without [**NachosChipeados**](https://github.com/NachosChipeados).
 
 <p align="center"><img src="https://user-images.githubusercontent.com/99835765/154850352-2bc968e8-f340-4944-8ef2-1a0dd1ca1a9d.png" align="center" width="60%"></p>
 

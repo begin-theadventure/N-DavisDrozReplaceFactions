@@ -1,7 +1,7 @@
 {
 	"Name" : "ඞb-ta.DavisDrozReplaceFactions",
-	"Description" : "-Replaces all (seven) factions with Davis & Droz.\nThis is an edit of Cpone's DavisDrozReplaceGates.\nbegin-theadventure 2023",
-	"Version": "ඞ1.0.5",
+	"Description" : "-Replaces all (seven) factions with Davis & Droz and adds an ID Card!\nThis is an edit of Cpone's DavisDrozReplaceGates, adding the ID card wouldn't have been possible without NachosChipeados.\nbegin-theadventure 2023",
+	"Version": "ඞ1.0.6",
 	"LoadPriority": 1,
 
 	"Scripts": [
